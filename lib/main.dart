@@ -21,7 +21,7 @@ void app() {
   runApp(GetMaterialApp(
     debugShowCheckedModeBanner: false,
     themeMode: ThemeMode.light,
-    theme: ThemeData(textTheme: GoogleFonts.merriweatherTextTheme()),
+    theme: ThemeData(textTheme: GoogleFonts.kanitTextTheme()),
     defaultTransition: Transition.fade,
     initialRoute: AppRoutes.main,
     getPages: AppPages.getPages,
