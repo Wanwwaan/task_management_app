@@ -129,7 +129,47 @@ class _MainScreenState extends State<MainScreen> {
                           shrinkWrap: true,
                           itemCount: 10,
                           itemBuilder: (BuildContext context, int index) {
-                            return (const Text('Task item'));
+                            return (Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                              padding: const EdgeInsets.only(top: 8, bottom: 8, right: 10),
+                              decoration: const BoxDecoration(
+                                  color: AppColors.white,
+                                  borderRadius: BorderRadius.all(Radius.circular(6)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: AppColors.lightGray,
+                                      blurRadius: 10,
+                                    ),
+                                  ]),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    decoration: const BoxDecoration(
+                                        color: AppColors.gradientLeft,
+                                        borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(2),
+                                          bottomRight: Radius.circular(2),
+                                        )),
+                                    height: 20,
+                                    width: 3,
+                                  ),
+                                  const SizedBox(
+                                    width: 32,
+                                  ),
+                                  const Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text('title'),
+                                        Text('description'),
+                                      ],
+                                    ),
+                                  ),
+                                  Text(':')
+                                ],
+                              ),
+                            ));
                           },
                         ),
                       )

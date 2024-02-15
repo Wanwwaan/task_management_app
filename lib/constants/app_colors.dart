@@ -11,6 +11,6 @@ class AppColors {
   static const Color coolGray = Color(0xFFB3AFB0);
   static const Color cement = Color(0xFF777077);
   static const Color gradientLeft = Color(0xFF98BFF9);
-  static const Color gradientMiddle = Color(0xFF98BFF9);
   static const Color gradientRight = Color(0xFF91A4FF);
+  static const Color lightGray = Color(0xFFE4E4E4);
 }
