@@ -195,13 +195,15 @@ class _MainScreenState extends State<MainScreen> {
                             ),
                           ),
                         ),
-                        TaskList(
-                            tasksData: tasks,
-                            bg: _mainController.tabKey.value == TabKey.todo
-                                ? AppColors.white
-                                : _mainController.tabKey.value == TabKey.doing
-                                    ? Colors.green
-                                    : Colors.deepOrange),
+                        Obx(
+                          () => TaskList(
+                              tasksData: tasks,
+                              bg: _mainController.tabKey.value == TabKey.todo
+                                  ? AppColors.white
+                                  : _mainController.tabKey.value == TabKey.doing
+                                      ? Colors.green
+                                      : Colors.deepOrange),
+                        ),
                       ],
                     ),
                   ),
