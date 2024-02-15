@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task_management_app/constants/app_colors.dart';
 import 'package:task_management_app/constants/tab_key.dart';
+import 'package:task_management_app/screen/main/controllers/main_controller.dart';
 import 'package:task_management_app/screen/main/views/widgets/task_tab.dart';
 import 'package:task_management_app/screen/main/views/widgets/welcome_text.dart';
 
+import 'widgets/task_list.dart';
 import 'widgets/user_avatar.dart';
 
 class MainScreen extends StatefulWidget {
@@ -14,13 +17,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  var tabKey = 'To-do';
-
-  void _onTabTask(String txt) {
-    setState(() {
-      tabKey = txt;
-    });
-  }
+  final _mainController = Get.find<MainController>();
 
   final data = {
     "tasks": [
@@ -37,11 +34,84 @@ class _MainScreenState extends State<MainScreen> {
         "description": "Go for a run or do a workout at home",
         "createdAt": "2023-03-25T09:00:00Z",
         "status": "TODO"
-      }
+      },
+      {
+        "id": "119a8c45-3f3d-41da-88bb-423c5367b81a",
+        "title": "Exercise",
+        "description": "Go for a run or do a workout at home",
+        "createdAt": "2023-03-25T09:00:00Z",
+        "status": "TODO"
+      },
+      {
+        "id": "119a8c45-3f3d-41da-88bb-423c5367b81a",
+        "title": "Exercise",
+        "description": "Go for a run or do a workout at home",
+        "createdAt": "2023-03-25T09:00:00Z",
+        "status": "TODO"
+      },
+      {
+        "id": "119a8c45-3f3d-41da-88bb-423c5367b81a",
+        "title": "Exercise",
+        "description": "Go for a run or do a workout at home",
+        "createdAt": "2023-03-25T09:00:00Z",
+        "status": "TODO"
+      },
     ],
     "pageNumber": 0,
     "totalPages": 16
   };
+
+  List tasks = [
+    {
+      "id": "cbb0732a-c9ab-4855-b66f-786cd41a3cd1",
+      "title": "Read a book",
+      "description": "Spend an hour reading a book for pleasure",
+      "createdAt": "2023-03-24T19:30:00Z",
+      "status": "TODO"
+    },
+    {
+      "id": "cbb0732a-c9ab-4855-b66f-786cd41a3cd1",
+      "title": "Read a book2",
+      "description": "Spend an hour reading a book for pleasure Spend an hour reading a book for pleasure",
+      "createdAt": "2023-03-24T19:40:00Z",
+      "status": "TODO"
+    },
+    {
+      "id": "cbb0732a-c9ab-4855-b66f-786cd41a3cd1",
+      "title": "Read a book3",
+      "description": "Spend an hour reading a book for pleasure Spend an hour reading a book for pleasure",
+      "createdAt": "2023-03-24T19:35:00Z",
+      "status": "TODO"
+    },
+    {
+      "id": "119a8c45-3f3d-41da-88bb-423c5367b81a",
+      "title": "Exercise1",
+      "description": "Go for a run or do a workout at home",
+      "createdAt": "2023-03-25T09:00:01Z",
+      "status": "TODO"
+    },
+    {
+      "id": "119a8c45-3f3d-41da-88bb-423c5367b81a",
+      "title": "Exercise3",
+      "description": "Go for a run or do a workout at home",
+      "createdAt": "2023-03-25T09:00:01Z",
+      "status": "TODO"
+    },
+    {
+      "id": "119a8c45-3f3d-41da-88bb-423c5367b81a",
+      "title": "Exercise2",
+      "description": "Go for a run or do a workout at home",
+      "createdAt": "2023-03-25T09:00:01Z",
+      "status": "TODO"
+    },
+    {
+      "id": "119a8c45-3f3d-41da-88bb-423c5367b81a",
+      "title": "Exercise4",
+      "description": "Go for a run or do a workout at home",
+      "createdAt": "2023-03-25T09:01:01Z",
+      "status": "TODO"
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -77,103 +147,63 @@ class _MainScreenState extends State<MainScreen> {
                         topLeft: Radius.circular(20),
                         topRight: Radius.circular(20),
                       )),
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.symmetric(
-                          vertical: 20,
-                          horizontal: 25,
-                        ),
-                        height: 48,
-                        decoration: const BoxDecoration(
-                          color: AppColors.whiteSmoke,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(30),
+                  child: Obx(
+                    () => Column(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.symmetric(
+                            vertical: 20,
+                            horizontal: 25,
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.titaniumWhite, //New
-                              blurRadius: 5,
-                              spreadRadius: 0,
-                            )
-                          ],
-                        ),
-                        //TODO: Will separate to new widget
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              TaskTab(
-                                tabKey: tabKey,
-                                tabName: TabKey.todo,
-                                onTab: () => _onTabTask(TabKey.todo),
-                              ),
-                              TaskTab(
-                                tabKey: tabKey,
-                                tabName: TabKey.doing,
-                                onTab: () => _onTabTask(TabKey.doing),
-                              ),
-                              TaskTab(
-                                tabKey: tabKey,
-                                tabName: TabKey.done,
-                                onTab: () => _onTabTask(TabKey.done),
-                              ),
+                          height: 48,
+                          decoration: const BoxDecoration(
+                            color: AppColors.whiteSmoke,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(30),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.titaniumWhite, //New
+                                blurRadius: 5,
+                                spreadRadius: 0,
+                              )
                             ],
                           ),
+                          //TODO: Will separate to new widget
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                TaskTab(
+                                  tabKey: _mainController.tabKey.value,
+                                  tabName: TabKey.todo,
+                                  onTab: () => _mainController.onTabTask(TabKey.todo),
+                                ),
+                                TaskTab(
+                                  tabKey: _mainController.tabKey.value,
+                                  tabName: TabKey.doing,
+                                  onTab: () => _mainController.onTabTask(TabKey.doing),
+                                ),
+                                TaskTab(
+                                  tabKey: _mainController.tabKey.value,
+                                  tabName: TabKey.done,
+                                  onTab: () => _mainController.onTabTask(TabKey.done),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: 10,
-                          itemBuilder: (BuildContext context, int index) {
-                            return (Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                              padding: const EdgeInsets.only(top: 8, bottom: 8, right: 10),
-                              decoration: const BoxDecoration(
-                                  color: AppColors.white,
-                                  borderRadius: BorderRadius.all(Radius.circular(6)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: AppColors.lightGray,
-                                      blurRadius: 10,
-                                    ),
-                                  ]),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    decoration: const BoxDecoration(
-                                        color: AppColors.gradientLeft,
-                                        borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(2),
-                                          bottomRight: Radius.circular(2),
-                                        )),
-                                    height: 20,
-                                    width: 3,
-                                  ),
-                                  const SizedBox(
-                                    width: 32,
-                                  ),
-                                  const Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text('title'),
-                                        Text('description'),
-                                      ],
-                                    ),
-                                  ),
-                                  Text(':')
-                                ],
-                              ),
-                            ));
-                          },
-                        ),
-                      )
-                    ],
+                        TaskList(
+                            tasksData: tasks,
+                            bg: _mainController.tabKey.value == TabKey.todo
+                                ? AppColors.white
+                                : _mainController.tabKey.value == TabKey.doing
+                                    ? Colors.green
+                                    : Colors.deepOrange),
+                      ],
+                    ),
                   ),
                 ),
               ),

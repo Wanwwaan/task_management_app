@@ -56,7 +56,6 @@ class TaskTab extends StatelessWidget {
             fontSize: 16,
             fontWeight: FontWeight.w700,
             color: isTab ? AppColors.white : AppColors.silver,
-            // color: AppColors.silver, //inactive
           ),
         ),
       ),
