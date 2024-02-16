@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 
 import '../../../../constants/app_colors.dart';
+import '../../../../models/tab_task.dart';
 
 class TaskTab extends StatelessWidget {
-  final String tabKey;
-  final String tabName;
+  final String currentTab;
+  final TabTask tab;
   final Function() onTab;
 
   const TaskTab({
     super.key,
-    required this.tabKey,
-    required this.tabName, 
+    required this.currentTab,
+    required this.tab, 
     required this.onTab,
   });
 
   @override
   Widget build(BuildContext context) {
-    var isTab =  tabKey == tabName;
+    var isTab =  currentTab == tab.key;
 
     return Container(
       padding: const EdgeInsets.symmetric(
@@ -51,7 +52,7 @@ class TaskTab extends StatelessWidget {
       child: GestureDetector(
         onTap: onTab,
         child: Text(
-          tabName,
+          tab.value,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w700,

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
+import 'package:task_management_app/models/task.dart';
 
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/image_path.dart';
 import '../../../../utils/date_helper.dart';
 
 class TaskList extends StatefulWidget {
-  final List tasksData;
+  final List<Task> tasksData;
   final Color bg;
 
   const TaskList({
@@ -28,11 +29,11 @@ class _TaskListState extends State<TaskList> {
         child: GroupedListView(
           shrinkWrap: true,
           elements: widget.tasksData,
-          groupBy: ((element) => DateHelper.dateGroupSeparator(element['createdAt'])),
+          groupBy: ((element) => DateHelper.dateGroupSeparator(element.createdAt)),
           order: GroupedListOrder.ASC,
           groupSeparatorBuilder: (value) {
             final bool isHaveTask = widget.tasksData
-                .where((element) => DateHelper.dateGroupSeparator(element['createdAt']) == value)
+                .where((element) => DateHelper.dateGroupSeparator(element.createdAt) == value)
                 .isNotEmpty;
 
             return isHaveTask
@@ -49,7 +50,7 @@ class _TaskListState extends State<TaskList> {
                   )
                 : const SizedBox();
           },
-          itemComparator: (item1, item2) => item1['createdAt'].compareTo(item2['createdAt']),
+          itemComparator: (item1, item2) => item1.createdAt.compareTo(item2.createdAt),
           itemBuilder: (context, task) {
             final int taskIndex = widget.tasksData.indexOf(task);
 
@@ -117,7 +118,7 @@ class _TaskListState extends State<TaskList> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            task['title'],
+                            task.title,
                             style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
@@ -125,7 +126,7 @@ class _TaskListState extends State<TaskList> {
                             ),
                           ),
                           Text(
-                            task['description'],
+                            task.description,
                             style: const TextStyle(
                               fontSize: 14,
                               color: AppColors.darkGray,

@@ -6,6 +6,7 @@ import 'package:task_management_app/screen/main/controllers/main_controller.dart
 import 'package:task_management_app/screen/main/views/widgets/task_tab.dart';
 import 'package:task_management_app/screen/main/views/widgets/welcome_text.dart';
 
+import '../../../models/task.dart';
 import 'widgets/task_list.dart';
 import 'widgets/user_avatar.dart';
 
@@ -177,19 +178,19 @@ class _MainScreenState extends State<MainScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 TaskTab(
-                                  tabKey: _mainController.tabKey.value,
-                                  tabName: TabKey.todo,
-                                  onTab: () => _mainController.onTabTask(TabKey.todo),
+                                  currentTab: _mainController.tabKey.value,
+                                  tab: TabKey.todo,
+                                  onTab: () => _mainController.onTabTask(TabKey.todo.key),
                                 ),
                                 TaskTab(
-                                  tabKey: _mainController.tabKey.value,
-                                  tabName: TabKey.doing,
-                                  onTab: () => _mainController.onTabTask(TabKey.doing),
+                                  currentTab: _mainController.tabKey.value,
+                                  tab: TabKey.doing,
+                                  onTab: () => _mainController.onTabTask(TabKey.doing.key),
                                 ),
                                 TaskTab(
-                                  tabKey: _mainController.tabKey.value,
-                                  tabName: TabKey.done,
-                                  onTab: () => _mainController.onTabTask(TabKey.done),
+                                  currentTab: _mainController.tabKey.value,
+                                  tab: TabKey.done,
+                                  onTab: () => _mainController.onTabTask(TabKey.done.key),
                                 ),
                               ],
                             ),
@@ -197,10 +198,10 @@ class _MainScreenState extends State<MainScreen> {
                         ),
                         Obx(
                           () => TaskList(
-                              tasksData: tasks,
-                              bg: _mainController.tabKey.value == TabKey.todo
+                              tasksData: _mainController.todoList.value,
+                              bg: _mainController.tabKey.value == TabKey.todo.key
                                   ? AppColors.white
-                                  : _mainController.tabKey.value == TabKey.doing
+                                  : _mainController.tabKey.value == TabKey.doing.key
                                       ? Colors.green
                                       : Colors.deepOrange),
                         ),

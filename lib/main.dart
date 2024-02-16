@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:task_management_app/routes/app_routes.dart';
+import 'package:task_management_app/services/task_service.dart';
 
 import 'routes/app_pages.dart';
 
@@ -25,6 +26,9 @@ void app() {
     defaultTransition: Transition.fade,
     initialRoute: AppRoutes.main,
     getPages: AppPages.getPages,
+    initialBinding: BindingsBuilder(() {
+      Get.put(TaskService());
+    }),
     locale: const Locale('en', 'US'),
     builder: (context, children) {
       return MediaQuery(
