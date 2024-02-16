@@ -6,7 +6,6 @@ import 'package:task_management_app/screen/main/controllers/main_controller.dart
 import 'package:task_management_app/screen/main/views/widgets/task_tab.dart';
 import 'package:task_management_app/screen/main/views/widgets/welcome_text.dart';
 
-import '../../../models/task.dart';
 import 'widgets/task_list.dart';
 import 'widgets/user_avatar.dart';
 
@@ -19,100 +18,6 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final _mainController = Get.find<MainController>();
-
-  final data = {
-    "tasks": [
-      {
-        "id": "cbb0732a-c9ab-4855-b66f-786cd41a3cd1",
-        "title": "Read a book",
-        "description": "Spend an hour reading a book for pleasure",
-        "createdAt": "2023-03-24T19:30:00Z",
-        "status": "TODO"
-      },
-      {
-        "id": "119a8c45-3f3d-41da-88bb-423c5367b81a",
-        "title": "Exercise",
-        "description": "Go for a run or do a workout at home",
-        "createdAt": "2023-03-25T09:00:00Z",
-        "status": "TODO"
-      },
-      {
-        "id": "119a8c45-3f3d-41da-88bb-423c5367b81a",
-        "title": "Exercise",
-        "description": "Go for a run or do a workout at home",
-        "createdAt": "2023-03-25T09:00:00Z",
-        "status": "TODO"
-      },
-      {
-        "id": "119a8c45-3f3d-41da-88bb-423c5367b81a",
-        "title": "Exercise",
-        "description": "Go for a run or do a workout at home",
-        "createdAt": "2023-03-25T09:00:00Z",
-        "status": "TODO"
-      },
-      {
-        "id": "119a8c45-3f3d-41da-88bb-423c5367b81a",
-        "title": "Exercise",
-        "description": "Go for a run or do a workout at home",
-        "createdAt": "2023-03-25T09:00:00Z",
-        "status": "TODO"
-      },
-    ],
-    "pageNumber": 0,
-    "totalPages": 16
-  };
-
-  List tasks = [
-    {
-      "id": "cbb0732a-c9ab-4855-b66f-786cd41a3cd1",
-      "title": "Read a book",
-      "description": "Spend an hour reading a book for pleasure",
-      "createdAt": "2023-03-24T19:30:00Z",
-      "status": "TODO"
-    },
-    {
-      "id": "cbb0732a-c9ab-4855-b66f-786cd41a3cd1",
-      "title": "Read a book2",
-      "description": "Spend an hour reading a book for pleasure Spend an hour reading a book for pleasure",
-      "createdAt": "2023-03-24T19:40:00Z",
-      "status": "TODO"
-    },
-    {
-      "id": "cbb0732a-c9ab-4855-b66f-786cd41a3cd1",
-      "title": "Read a book3",
-      "description": "Spend an hour reading a book for pleasure Spend an hour reading a book for pleasure",
-      "createdAt": "2023-03-24T19:35:00Z",
-      "status": "TODO"
-    },
-    {
-      "id": "119a8c45-3f3d-41da-88bb-423c5367b81a",
-      "title": "Exercise1",
-      "description": "Go for a run or do a workout at home",
-      "createdAt": "2023-03-25T09:00:01Z",
-      "status": "TODO"
-    },
-    {
-      "id": "119a8c45-3f3d-41da-88bb-423c5367b81a",
-      "title": "Exercise3",
-      "description": "Go for a run or do a workout at home",
-      "createdAt": "2023-03-25T09:00:01Z",
-      "status": "TODO"
-    },
-    {
-      "id": "119a8c45-3f3d-41da-88bb-423c5367b81a",
-      "title": "Exercise2",
-      "description": "Go for a run or do a workout at home",
-      "createdAt": "2023-03-25T09:00:01Z",
-      "status": "TODO"
-    },
-    {
-      "id": "119a8c45-3f3d-41da-88bb-423c5367b81a",
-      "title": "Exercise4",
-      "description": "Go for a run or do a workout at home",
-      "createdAt": "2023-03-25T09:01:01Z",
-      "status": "TODO"
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -178,17 +83,17 @@ class _MainScreenState extends State<MainScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 TaskTab(
-                                  currentTab: _mainController.tabKey.value,
+                                  currentTab: _mainController.currentTab.value,
                                   tab: TabKey.todo,
                                   onTab: () => _mainController.onTabTask(TabKey.todo.key),
                                 ),
                                 TaskTab(
-                                  currentTab: _mainController.tabKey.value,
+                                  currentTab: _mainController.currentTab.value,
                                   tab: TabKey.doing,
                                   onTab: () => _mainController.onTabTask(TabKey.doing.key),
                                 ),
                                 TaskTab(
-                                  currentTab: _mainController.tabKey.value,
+                                  currentTab: _mainController.currentTab.value,
                                   tab: TabKey.done,
                                   onTab: () => _mainController.onTabTask(TabKey.done.key),
                                 ),
@@ -199,9 +104,10 @@ class _MainScreenState extends State<MainScreen> {
                         Obx(
                           () => TaskList(
                               tasksData: _mainController.todoList.value,
-                              bg: _mainController.tabKey.value == TabKey.todo.key
+                              isLoadMore: _mainController.isLoadmore.value,
+                              bg: _mainController.currentTab.value == TabKey.todo.key
                                   ? AppColors.white
-                                  : _mainController.tabKey.value == TabKey.doing.key
+                                  : _mainController.currentTab.value == TabKey.doing.key
                                       ? Colors.green
                                       : Colors.deepOrange),
                         ),

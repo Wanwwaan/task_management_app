@@ -10,11 +10,10 @@ class TaskService {
           'https://todo-list-api-mfchjooefq-as.a.run.app/todo-list?offset=$offsetNumber&limit=$limit&sortBy=createdAt&isAsc=true&status=$taskStatus'));
       final tasksMap = json.decode(response.body) as Map<String, dynamic>;
       final taskList = TaskList.fromJson(tasksMap);
-      print('taskList --> $taskList');
       return taskList;
     } catch (e) {
       print('Error getTaskList: $e');
+      return null;
     }
-    return null;
   }
 }

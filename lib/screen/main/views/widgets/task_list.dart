@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:task_management_app/models/task.dart';
+import 'package:task_management_app/screen/main/controllers/main_controller.dart';
 
 import '../../../../constants/app_colors.dart';
 import '../../../../constants/image_path.dart';
@@ -9,11 +11,13 @@ import '../../../../utils/date_helper.dart';
 class TaskList extends StatefulWidget {
   final List<Task> tasksData;
   final Color bg;
+  final bool isLoadMore;
 
   const TaskList({
     super.key,
     required this.tasksData,
-    required this.bg, //TODO: this will remove after add tabs screen for each tab
+    required this.bg,
+    required this.isLoadMore, //TODO: this will remove after add tabs screen for each tab
   });
 
   @override
@@ -23,11 +27,14 @@ class TaskList extends StatefulWidget {
 class _TaskListState extends State<TaskList> {
   @override
   Widget build(BuildContext context) {
+    final mainController = Get.find<MainController>();
     return Expanded(
       child: Container(
         color: widget.bg,
         child: GroupedListView(
+          physics: const ClampingScrollPhysics(),
           shrinkWrap: true,
+          controller: mainController.scrollController,
           elements: widget.tasksData,
           groupBy: ((element) => DateHelper.dateGroupSeparator(element.createdAt)),
           order: GroupedListOrder.ASC,
@@ -96,52 +103,59 @@ class _TaskListState extends State<TaskList> {
                         blurRadius: 10,
                       ),
                     ]),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                child: Column(
                   children: [
-                    Container(
-                      alignment: Alignment.topCenter,
-                      decoration: const BoxDecoration(
-                          color: AppColors.gradientLeft,
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(2),
-                            bottomRight: Radius.circular(2),
-                          )),
-                      height: 24,
-                      width: 3,
-                    ),
-                    const SizedBox(
-                      width: 28,
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            task.title,
-                            style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.gray,
-                            ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          alignment: Alignment.topCenter,
+                          decoration: const BoxDecoration(
+                              color: AppColors.gradientLeft,
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(2),
+                                bottomRight: Radius.circular(2),
+                              )),
+                          height: 24,
+                          width: 3,
+                        ),
+                        const SizedBox(
+                          width: 28,
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                task.title,
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.gray,
+                                ),
+                              ),
+                              Text(
+                                task.description,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: AppColors.darkGray,
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
-                            task.description,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: AppColors.darkGray,
-                            ),
+                        ),
+                        Center(
+                          child: Image.asset(
+                            ImagePath.menu,
+                            width: 20,
+                            height: 20,
                           ),
-                        ],
-                      ),
+                        )
+                      ],
                     ),
-                    Center(
-                      child: Image.asset(
-                        ImagePath.menu,
-                        width: 20,
-                        height: 20,
-                      ),
-                    )
+                    widget.isLoadMore && widget.tasksData.length - 1 == widget.tasksData.indexOf(task)
+                        ? const Center(child: CircularProgressIndicator(color: AppColors.gradientRight))
+                        : const SizedBox()
                   ],
                 ),
               ),
