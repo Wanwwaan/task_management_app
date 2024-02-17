@@ -34,7 +34,7 @@ class MainController extends GetxController {
       }
     }
 
-    final result = await taskService.getTaskList(offsetNumber, 0, taskStatus);
+    final result = await taskService.getTaskList(offsetNumber, 10, taskStatus);
     //Check if load data first time will add all data to variable, if not will add new data to current value.
     if (result != null) {
       if (taskData.value != null) {
