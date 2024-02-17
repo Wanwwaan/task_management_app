@@ -40,15 +40,16 @@ class _TaskListState extends State<TaskList> {
               groupBy: ((element) => DateHelper.dateGroupSeparator(element.createdAt)),
               order: GroupedListOrder.ASC,
               groupSeparatorBuilder: (value) {
+                final groupDate = value;
                 final bool isHaveTask = widget.tasksData
-                    .where((element) => DateHelper.dateGroupSeparator(element.createdAt) == value)
+                    .where((element) => DateHelper.dateGroupSeparator(element.createdAt) == groupDate)
                     .isNotEmpty;
 
                 return isHaveTask
                     ? Padding(
                         padding: const EdgeInsets.only(left: 24, right: 24, top: 8),
                         child: Text(
-                          value,
+                          DateHelper.dateGroupFormatr(groupDate),
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
