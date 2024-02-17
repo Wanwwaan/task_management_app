@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_management_app/constants/tab_key.dart';
-import 'package:task_management_app/models/task.dart';
 import 'package:task_management_app/models/task_list.dart';
 import 'package:task_management_app/services/task_service.dart';
 
@@ -9,156 +8,87 @@ class MainController extends GetxController {
   final taskService = Get.find<TaskService>();
   final scrollController = ScrollController();
 
-  var currentTab = TabKey.todo.key.obs;
-  TaskList? todoData;
-  TaskList? doingData;
-  TaskList? doneData;
-  RxList<Task> todoList = <Task>[].obs;
-  RxList<Task> doingList = <Task>[].obs;
-  RxList<Task> doneList = <Task>[].obs;
+  var currentTab = TabKey.todoTab.key.obs;
+  var isLoading = false.obs;
+  final Rxn<TaskList> todoData = Rxn<TaskList>();
+  final Rxn<TaskList> doingData = Rxn<TaskList>();
+  final Rxn<TaskList> doneData = Rxn<TaskList>();
   var isLoadmore = false.obs;
+  var isError = false.obs;
 
-  Future<void> fetchTodoData([bool fetchAllData = false]) async {
+  Future<void> getTasks(String taskStatus, Rxn<TaskList> taskData) async {
     int offsetNumber = 0;
-    if (todoData != null) {
+
+    //Check page number when load more data
+    if (taskData.value != null) {
       if (isLoadmore.value) {
-        int pageNumber = todoData!.pageNumber;
-        int totalPages = todoData!.totalPages;
+        int pageNumber = taskData.value!.pageNumber;
+        int totalPages = taskData.value!.totalPages;
         if (pageNumber < totalPages) {
           offsetNumber = pageNumber + 1;
         } else {
           offsetNumber = pageNumber;
         }
       } else {
-        offsetNumber = todoData!.pageNumber;
+        offsetNumber = taskData.value!.pageNumber;
       }
     }
 
-    final result = await taskService.getTaskList(offsetNumber, 10, 'TODO');
+    final result = await taskService.getTaskList(offsetNumber, 0, taskStatus);
+    //Check if load data first time will add all data to variable, if not will add new data to current value.
     if (result != null) {
-      if (todoData != null) {
+      if (taskData.value != null) {
         if (result.tasks.isNotEmpty) {
-          todoData = result;
-          if (todoList.isNotEmpty) {
-            todoList.addAll(result.tasks);
-          }
+          taskData.value!.pageNumber = result.pageNumber;
+          taskData.value!.totalPages = result.totalPages;
+          taskData.value!.tasks.addAll(result.tasks);
         }
       } else {
-        todoData = result;
-        todoList(result.tasks);
+        taskData.value = result;
       }
     } else {
-      //TODO:Display error alert
+      if (isError.value) return;
+      isError.value = true;
     }
   }
 
-  Future<void> fetchDoingData([bool fetchAllData = false]) async {
-    int offsetNumber = 0;
-    if (doingData != null) {
-      if (isLoadmore.value) {
-        int pageNumber = doingData!.pageNumber;
-        int totalPages = doingData!.totalPages;
-        if (pageNumber < totalPages) {
-          offsetNumber = pageNumber + 1;
-        } else {
-          offsetNumber = pageNumber;
-        }
-      } else {
-        offsetNumber = doingData!.pageNumber;
-      }
-    }
-
-    final result = await taskService.getTaskList(offsetNumber, 10, 'DOING');
-    if (result != null) {
-      if (doingData != null) {
-        if (result.tasks.isNotEmpty) {
-          doingData = result;
-          if (doingList.isNotEmpty) {
-            doingList.addAll(result.tasks);
-          }
-        }
-      } else {
-        doingData = result;
-        doingList(result.tasks);
-      }
-    } else {
-      //TODO:Display error alert
-    }
+  Future<void> getTodoData() async {
+    await getTasks(TabKey.todoTab.key, todoData);
   }
 
-  Future<void> fetchDoneData([bool fetchAllData = false]) async {
-    int offsetNumber = 0;
-    if (doneData != null) {
-      if (isLoadmore.value) {
-        int pageNumber = doneData!.pageNumber;
-        int totalPages = doneData!.totalPages;
-        if (pageNumber < totalPages) {
-          offsetNumber = pageNumber + 1;
-        } else {
-          offsetNumber = pageNumber;
-        }
-      } else {
-        offsetNumber = doneData!.pageNumber;
-      }
-    }
-
-    final result = await taskService.getTaskList(offsetNumber, 10, 'DONE');
-    if (result != null) {
-      if (doneData != null) {
-        if (result.tasks.isNotEmpty) {
-          doneData = result;
-          if (doneList.isNotEmpty) {
-            doneList.addAll(result.tasks);
-          }
-        }
-      } else {
-        doneData = result;
-        doneList(result.tasks);
-      }
-    } else {
-      //TODO:Display error alert
-    }
+  Future<void> getDoingData() async {
+    await getTasks(TabKey.doingTab.key, doingData);
   }
 
-  Future<void> fetchData(String currentTab) async {
+  Future<void> getDoneData([bool fetchAllData = false]) async {
+    await getTasks(TabKey.doneTab.key, doneData);
+  }
+
+  Future<void> getTaskData(String currentTab) async {
+    print('currentTab --> $currentTab');
     switch (currentTab) {
-      case 'TODO':
-        await fetchTodoData();
+      case todo:
+        await getTodoData();
         break;
-      case 'DOING':
-        await fetchDoingData();
+      case doing:
+        isError.value = true;
+        await getDoingData();
         break;
-      case 'DONE':
-        await fetchDoneData();
+      case done:
+        await getDoneData();
       default:
+        break;
     }
   }
 
-  Future<void> onTabTask([String? tab = '']) async {
-    var tabKey = '';
-    if (tab == '') {
-      tabKey = currentTab.value;
-    } else {
-      tabKey = tab!;
-    }
+  Future<void> onTabTask(String tabKey) async {
     currentTab.value = tabKey;
-
-    switch (tabKey) {
-      case 'TODO':
-        await fetchTodoData();
-        break;
-      case 'DOING':
-        await fetchDoingData();
-        break;
-      case 'DONE':
-        await fetchDoneData();
-      default:
-    }
+    await getTaskData(tabKey);
   }
 
   Future<void> loadMore() async {
     isLoadmore.value = true;
-    await onTabTask();
+    await getTaskData(currentTab.value);
     isLoadmore.value = false;
   }
 
@@ -169,16 +99,23 @@ class MainController extends GetxController {
   }
 
   Future<void> fetchAllTasks() async {
-    await fetchTodoData();
-    await fetchDoingData();
-    await fetchDoneData();
+    await getTodoData();
+    await getDoingData();
+    await getDoneData();
   }
 
   @override
   void onInit() async {
     super.onInit();
+    isLoading.value = true;
     await fetchAllTasks();
+    isLoading.value = false;
     scrollController.addListener(scrollerListener);
+  }
+
+  void closeErrorModal() {
+    Get.back();
+    isError.value = false;
   }
 
   @override

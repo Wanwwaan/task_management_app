@@ -12,7 +12,6 @@ class TaskService {
       final taskList = TaskList.fromJson(tasksMap);
       return taskList;
     } catch (e) {
-      print('Error getTaskList: $e');
       return null;
     }
   }

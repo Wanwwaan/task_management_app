@@ -1,9 +1,9 @@
 import 'package:task_management_app/models/task.dart';
 
 class TaskList {
-  final List<Task> tasks;
-  final int pageNumber;
-  final int totalPages;
+  List<Task> tasks;
+  int pageNumber;
+  int totalPages;
 
   TaskList({
     required this.tasks,
