@@ -40,6 +40,7 @@ dependencies:
   grouped_list: ^5.1.2
   moment_dart: ^1.1.1
   http: ^1.1.0
+  flutter_screen_lock: ^9.0.2
 
 dev_dependencies:
   flutter_test:

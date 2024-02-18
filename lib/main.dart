@@ -24,7 +24,7 @@ void app() {
     themeMode: ThemeMode.light,
     theme: ThemeData(textTheme: GoogleFonts.kanitTextTheme()),
     defaultTransition: Transition.fade,
-    initialRoute: AppRoutes.main,
+    initialRoute: AppRoutes.passCodeLock,
     getPages: AppPages.getPages,
     initialBinding: BindingsBuilder(() {
       Get.put(TaskService());

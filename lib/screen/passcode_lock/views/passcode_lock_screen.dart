@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screen_lock/flutter_screen_lock.dart';
+import 'package:get/get.dart';
+import 'package:task_management_app/constants/app_colors.dart';
+import 'package:task_management_app/constants/app_constants.dart';
+import 'package:task_management_app/routes/app_routes.dart';
+import 'package:task_management_app/screen/passcode_lock/controllers/passcode_lock_controller.dart';
 
 class PasscodeLockScreen extends StatefulWidget {
   const PasscodeLockScreen({super.key});
@@ -8,11 +14,19 @@ class PasscodeLockScreen extends StatefulWidget {
 }
 
 class _PasscodeLockScreenState extends State<PasscodeLockScreen> {
+  final _passcodeLockController = Get.find<PasscodeLockController>();
+
   @override
   Widget build(BuildContext context) {
-    return  Container(
-      color: Colors.white,
-      child: const Text('PasscodeLockScreen'),
+    return Scaffold(
+      backgroundColor: AppColors.primary,
+      body: Container(
+        color: AppColors.primary,
+        child: ScreenLock(
+          correctString: AppConstants.passcode,
+          onUnlocked: () => _passcodeLockController.navigateToNextScreen(context),
+        ),
+      ),
     );
   }
 }
