@@ -11,6 +11,7 @@ import '../../../../utils/date_helper.dart';
 import '../../../../widgets/no_data.dart';
 
 class TaskList extends StatefulWidget {
+  final String tabKey;
   final List<Task> tasksData;
   final bool isLoadMore;
   final bool isLoading;
@@ -20,6 +21,7 @@ class TaskList extends StatefulWidget {
     required this.tasksData,
     required this.isLoadMore,
     required this.isLoading,
+    required this.tabKey,
   });
 
   @override
@@ -36,6 +38,7 @@ class _TaskListState extends State<TaskList> {
           ? widget.tasksData.isEmpty
               ? const NoData()
               : GroupedListView(
+                  key: PageStorageKey(widget.tabKey),
                   physics: const ClampingScrollPhysics(),
                   shrinkWrap: true,
                   controller: mainController.scrollController,

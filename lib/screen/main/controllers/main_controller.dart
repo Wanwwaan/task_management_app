@@ -10,9 +10,9 @@ class MainController extends GetxController {
 
   var currentTab = TabKey.todoTab.key.obs;
   var isLoading = false.obs;
-  final Rxn<TaskList> todoData = Rxn<TaskList>();
-  final Rxn<TaskList> doingData = Rxn<TaskList>();
-  final Rxn<TaskList> doneData = Rxn<TaskList>();
+  var todoData = Rxn<TaskList>();
+  var doingData = Rxn<TaskList>();
+  var doneData = Rxn<TaskList>();
   var isLoadmore = false.obs;
   var isError = false.obs;
 
@@ -65,13 +65,11 @@ class MainController extends GetxController {
   }
 
   Future<void> getTaskData(String currentTab) async {
-    print('currentTab --> $currentTab');
     switch (currentTab) {
       case todo:
         await getTodoData();
         break;
       case doing:
-        isError.value = true;
         await getDoingData();
         break;
       case done:
