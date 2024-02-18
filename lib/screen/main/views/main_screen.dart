@@ -1,11 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_management_app/constants/app_colors.dart';
-import 'package:task_management_app/constants/image_path.dart';
 import 'package:task_management_app/constants/tab_key.dart';
+import 'package:task_management_app/routes/app_routes.dart';
 import 'package:task_management_app/screen/main/controllers/main_controller.dart';
 import 'package:task_management_app/screen/main/views/widgets/task_tab.dart';
 import 'package:task_management_app/screen/main/views/widgets/welcome_text.dart';
+import 'package:task_management_app/services/auth_service.dart';
 
 import '../../../widgets/error_modal.dart';
 import 'widgets/task_list.dart';
@@ -18,8 +21,52 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   final _mainController = Get.find<MainController>();
+  final _authService = Get.find<AuthService>();
+  Timer? countdownTimer;
+
+  void startTimerAppInactive() {
+    countdownTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      _authService.setIsAuth(false);
+    });
+  }
+
+  void stopTimerCountAppInactive() {
+    setState(() {
+      countdownTimer!.cancel();
+    });
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.inactive:
+        startTimerAppInactive();
+        break;
+      case AppLifecycleState.resumed:
+        stopTimerCountAppInactive();
+        if (!_authService.isAuthed.value) {
+          Get.offNamed(AppRoutes.passCodeLock);
+        }
+        break;
+      default:
+    }
+
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

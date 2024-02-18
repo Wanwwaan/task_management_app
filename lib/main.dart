@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:task_management_app/routes/app_routes.dart';
+import 'package:task_management_app/services/auth_service.dart';
 import 'package:task_management_app/services/task_service.dart';
 
 import 'routes/app_pages.dart';
@@ -27,6 +28,7 @@ void app() {
     initialRoute: AppRoutes.passCodeLock,
     getPages: AppPages.getPages,
     initialBinding: BindingsBuilder(() {
+      Get.put(AuthService());
       Get.put(TaskService());
     }),
     locale: const Locale('en', 'US'),
