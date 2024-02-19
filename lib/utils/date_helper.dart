@@ -4,7 +4,7 @@ class DateHelper {
   static String dateGroupSeparator(String date) {
     return Moment(DateTime.parse(date)).format('YYYY-MM-DD');
   }
-  static String dateGroupFormatr(String date) {
+  static String dateGroupFormat(String date) {
     return Moment(DateTime.parse(date)).format('D MMM YYYY');
   }
 }

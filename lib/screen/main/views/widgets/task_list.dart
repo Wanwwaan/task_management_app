@@ -55,7 +55,7 @@ class _TaskListState extends State<TaskList> {
                         ? Padding(
                             padding: const EdgeInsets.only(left: 24, right: 24, top: 8),
                             child: Text(
-                              DateHelper.dateGroupFormatr(groupDate),
+                              DateHelper.dateGroupFormat(groupDate),
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
