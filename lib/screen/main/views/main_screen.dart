@@ -1,10 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_management_app/constants/app_colors.dart';
 import 'package:task_management_app/constants/tab_key.dart';
-import 'package:task_management_app/routes/app_routes.dart';
 import 'package:task_management_app/screen/main/controllers/main_controller.dart';
 import 'package:task_management_app/screen/main/views/widgets/task_tab.dart';
 import 'package:task_management_app/screen/main/views/widgets/welcome_text.dart';
@@ -29,7 +26,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     if (_mainController.appInActiveTimer == null) {
-      _mainController.startTimerAppInactive();
+      _mainController.startAppInactiveTimer();
     } else {
       _mainController.stopAndStartAppInactiveTimer();
     }
@@ -43,7 +40,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
         if (_mainController.appInActiveTimer != null) {
           _mainController.stopAndStartAppInactiveTimer();
         } else {
-          _mainController.startTimerAppInactive();
+          _mainController.startAppInactiveTimer();
         }
         break;
       case AppLifecycleState.resumed:

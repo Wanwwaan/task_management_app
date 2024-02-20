@@ -109,7 +109,7 @@ class MainController extends GetxController {
     await getDoneData();
   }
 
-  void startTimerAppInactive() {
+  void startAppInactiveTimer() {
     appInActiveTimer = Timer.periodic(
       const Duration(seconds: 10),
       (timer) {
@@ -132,7 +132,7 @@ class MainController extends GetxController {
 
   void stopAndStartAppInactiveTimer() {
     stopTimerCountAppInactive();
-    startTimerAppInactive();
+    startAppInactiveTimer();
   }
 
   @override
