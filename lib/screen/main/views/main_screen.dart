@@ -24,23 +24,15 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   final _mainController = Get.find<MainController>();
   final _authService = Get.find<AuthService>();
-  Timer? countdownTimer;
-
-  void startTimerAppInactive() {
-    countdownTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
-      _authService.setIsAuth(false);
-    });
-  }
-
-  void stopTimerCountAppInactive() {
-    setState(() {
-      countdownTimer!.cancel();
-    });
-  }
 
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
+    if (_mainController.appInActiveTimer == null) {
+      _mainController.startTimerAppInactive();
+    } else {
+      _mainController.stopAndStartAppInactiveTimer();
+    }
     super.initState();
   }
 
@@ -48,142 +40,151 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.inactive:
-        startTimerAppInactive();
+        if (_mainController.appInActiveTimer != null) {
+          _mainController.stopAndStartAppInactiveTimer();
+        } else {
+          _mainController.startTimerAppInactive();
+        }
         break;
       case AppLifecycleState.resumed:
-        stopTimerCountAppInactive();
-        if (!_authService.isAuthed.value) {
-          Get.offNamed(AppRoutes.passCodeLock);
+        if (_mainController.appInActiveTimer != null) {
+          _mainController.stopAndStartAppInactiveTimer();
         }
         break;
       default:
     }
-
     super.didChangeAppLifecycleState(state);
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _mainController.cancelTimer();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.primary,
-      body: SafeArea(
-        child: Container(
-          width: double.infinity,
-          color: AppColors.primary,
-          child: Stack(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 15, right: 15),
-                      child: UserAvatar(),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 40),
-                      child: WelcomeText(),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Expanded(
-                      child: Container(
-                        decoration: const BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20),
-                            )),
-                        child: Obx(
-                          () => Column(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.symmetric(
-                                  vertical: 20,
-                                  horizontal: 25,
-                                ),
-                                height: 48,
-                                decoration: const BoxDecoration(
-                                  color: AppColors.whiteSmoke,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(30),
+    return Listener(
+      onPointerDown: (_) {
+        if (_mainController.appInActiveTimer != null) {
+          _mainController.stopAndStartAppInactiveTimer();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: const Color.fromARGB(255, 21, 21, 22),
+        body: SafeArea(
+          child: Container(
+            width: double.infinity,
+            color: AppColors.primary,
+            child: Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(left: 15, right: 15),
+                        child: UserAvatar(),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 40),
+                        child: WelcomeText(),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      Expanded(
+                        child: Container(
+                          decoration: const BoxDecoration(
+                              color: AppColors.white,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20),
+                              )),
+                          child: Obx(
+                            () => Column(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.symmetric(
+                                    vertical: 20,
+                                    horizontal: 25,
                                   ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: AppColors.titaniumWhite, //New
-                                      blurRadius: 5,
-                                      spreadRadius: 0,
-                                    )
-                                  ],
-                                ),
-                                //TODO: Will separate to new widget
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      TaskTab(
-                                        currentTab: _mainController.currentTab.value,
-                                        tab: TabKey.todoTab,
-                                        onTab: () => _mainController.onTabTask(TabKey.todoTab.key),
-                                      ),
-                                      TaskTab(
-                                        currentTab: _mainController.currentTab.value,
-                                        tab: TabKey.doingTab,
-                                        onTab: () => _mainController.onTabTask(TabKey.doingTab.key),
-                                      ),
-                                      TaskTab(
-                                        currentTab: _mainController.currentTab.value,
-                                        tab: TabKey.doneTab,
-                                        onTab: () => _mainController.onTabTask(TabKey.doneTab.key),
-                                      ),
+                                  height: 48,
+                                  decoration: const BoxDecoration(
+                                    color: AppColors.whiteSmoke,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(30),
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AppColors.titaniumWhite, //New
+                                        blurRadius: 5,
+                                        spreadRadius: 0,
+                                      )
                                     ],
                                   ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        TaskTab(
+                                          currentTab: _mainController.currentTab.value,
+                                          tab: TabKey.todoTab,
+                                          onTab: () => _mainController.onTabTask(TabKey.todoTab.key),
+                                        ),
+                                        TaskTab(
+                                          currentTab: _mainController.currentTab.value,
+                                          tab: TabKey.doingTab,
+                                          onTab: () => _mainController.onTabTask(TabKey.doingTab.key),
+                                        ),
+                                        TaskTab(
+                                          currentTab: _mainController.currentTab.value,
+                                          tab: TabKey.doneTab,
+                                          onTab: () => _mainController.onTabTask(TabKey.doneTab.key),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              Obx(
-                                () => TaskList(
-                                    tabKey: _mainController.currentTab.value,
-                                    isLoading: _mainController.isLoading.value,
-                                    isLoadMore: _mainController.isLoadmore.value,
-                                    tasksData: _mainController.currentTab.value == TabKey.todoTab.key
-                                        ? _mainController.todoData.value != null
-                                            ? _mainController.todoData.value!.tasks
-                                            : []
-                                        : _mainController.currentTab.value == TabKey.doingTab.key
-                                            ? _mainController.doingData.value != null
-                                                ? _mainController.doingData.value!.tasks
-                                                : []
-                                            : _mainController.doneData.value != null
-                                                ? _mainController.doneData.value!.tasks
-                                                : []),
-                              ),
-                            ],
+                                Obx(
+                                  () => TaskList(
+                                      tabKey: _mainController.currentTab.value,
+                                      isLoading: _mainController.isLoading.value,
+                                      isLoadMore: _mainController.isLoadmore.value,
+                                      tasksData: _mainController.currentTab.value == TabKey.todoTab.key
+                                          ? _mainController.todoData.value != null
+                                              ? _mainController.todoData.value!.tasks
+                                              : []
+                                          : _mainController.currentTab.value == TabKey.doingTab.key
+                                              ? _mainController.doingData.value != null
+                                                  ? _mainController.doingData.value!.tasks
+                                                  : []
+                                              : _mainController.doneData.value != null
+                                                  ? _mainController.doneData.value!.tasks
+                                                  : []),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              Obx(() => _mainController.isError.value
-                  ? ErrorModal(
-                      onPressed: () => _mainController.closeErrorModal(),
-                    )
-                  : const SizedBox())
-            ],
+                Obx(() => _mainController.isError.value
+                    ? ErrorModal(
+                        onPressed: () => _mainController.closeErrorModal(),
+                      )
+                    : const SizedBox())
+              ],
+            ),
           ),
         ),
       ),

@@ -1,12 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_management_app/constants/tab_key.dart';
 import 'package:task_management_app/models/task_list.dart';
 import 'package:task_management_app/services/task_service.dart';
 
+import '../../../routes/app_routes.dart';
+import '../../../services/auth_service.dart';
+
 class MainController extends GetxController {
   final taskService = Get.find<TaskService>();
   final scrollController = ScrollController();
+  final _authService = Get.find<AuthService>();
 
   var currentTab = TabKey.todoTab.key.obs;
   var isLoading = false.obs;
@@ -15,6 +21,7 @@ class MainController extends GetxController {
   var doneData = Rxn<TaskList>();
   var isLoadmore = false.obs;
   var isError = false.obs;
+  Timer? appInActiveTimer;
 
   Future<void> getTasks(String taskStatus, Rxn<TaskList> taskData) async {
     int offsetNumber = 0;
@@ -100,6 +107,32 @@ class MainController extends GetxController {
     await getTodoData();
     await getDoingData();
     await getDoneData();
+  }
+
+  void startTimerAppInactive() {
+    appInActiveTimer = Timer.periodic(
+      const Duration(seconds: 10),
+      (timer) {
+        Get.offNamed(AppRoutes.passCodeLock);
+        _authService.setIsAuth(false);
+        cancelTimer();
+      },
+    );
+  }
+
+  void cancelTimer() {
+    if (appInActiveTimer != null) {
+      appInActiveTimer!.cancel();
+    }
+  }
+
+  void stopTimerCountAppInactive() {
+    cancelTimer();
+  }
+
+  void stopAndStartAppInactiveTimer() {
+    stopTimerCountAppInactive();
+    startTimerAppInactive();
   }
 
   @override
