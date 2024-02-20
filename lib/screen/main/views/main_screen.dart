@@ -179,7 +179,16 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                     ? ErrorModal(
                         onPressed: () => _mainController.closeErrorModal(),
                       )
-                    : const SizedBox())
+                    : const SizedBox()),
+                Positioned(
+                  bottom: 30,
+                  right: 10,
+                  child: FloatingActionButton(
+                    backgroundColor: AppColors.gradientRight,
+                    child: const Icon(Icons.add),
+                    onPressed: () {},
+                  ),
+                ),
               ],
             ),
           ),
