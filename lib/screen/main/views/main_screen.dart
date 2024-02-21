@@ -5,7 +5,6 @@ import 'package:task_management_app/constants/tab_key.dart';
 import 'package:task_management_app/screen/main/controllers/main_controller.dart';
 import 'package:task_management_app/screen/main/views/widgets/task_tab.dart';
 import 'package:task_management_app/screen/main/views/widgets/welcome_text.dart';
-import 'package:task_management_app/services/auth_service.dart';
 
 import '../../../widgets/error_modal.dart';
 import 'widgets/add_button.dart';
@@ -21,7 +20,6 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   final _mainController = Get.find<MainController>();
-  final _authService = Get.find<AuthService>();
 
   @override
   void initState() {
