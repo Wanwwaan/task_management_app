@@ -4,8 +4,7 @@ import 'package:get/get.dart';
 import 'package:task_management_app/constants/app_colors.dart';
 import 'package:task_management_app/constants/app_constants.dart';
 
-import '../../../routes/app_routes.dart';
-import '../../../services/auth_service.dart';
+import '../controllers/passcode_lock_controller.dart';
 
 class PasscodeLockScreen extends StatefulWidget {
   const PasscodeLockScreen({super.key});
@@ -15,17 +14,7 @@ class PasscodeLockScreen extends StatefulWidget {
 }
 
 class _PasscodeLockScreenState extends State<PasscodeLockScreen> {
-  final _authService = Get.find<AuthService>();
-
-  void inputCorrectPasscode() {
-    _authService.setIsAuth(true);
-  }
-
-  Future<void> navigateToNextScreen(BuildContext context) async {
-    await Future.delayed(const Duration(milliseconds: 150));
-    Get.offNamed(AppRoutes.main);
-  }
-
+  final _passcodeLockController = Get.find<PasscodeLockController>();
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +24,9 @@ class _PasscodeLockScreenState extends State<PasscodeLockScreen> {
         color: AppColors.primary,
         child: ScreenLock(
           correctString: AppConstants.passcode,
-          onUnlocked: () => {
-            setState(() {
-              
-            inputCorrectPasscode();
-            navigateToNextScreen(context);
-            })
+          onUnlocked: () {
+            _passcodeLockController.inputCorrectPasscode();
+            _passcodeLockController.navigateToNextScreen(context);
           },
         ),
       ),
