@@ -8,6 +8,7 @@ import 'package:task_management_app/screen/main/views/widgets/welcome_text.dart'
 import 'package:task_management_app/services/auth_service.dart';
 
 import '../../../widgets/error_modal.dart';
+import 'widgets/add_button.dart';
 import 'widgets/task_list.dart';
 import 'widgets/user_avatar.dart';
 
@@ -180,15 +181,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                         onPressed: () => _mainController.closeErrorModal(),
                       )
                     : const SizedBox()),
-                Positioned(
-                  bottom: 30,
-                  right: 10,
-                  child: FloatingActionButton(
-                    backgroundColor: AppColors.gradientRight,
-                    child: const Icon(Icons.add),
-                    onPressed: () {},
-                  ),
-                ),
+                const AddButton(),
               ],
             ),
           ),
