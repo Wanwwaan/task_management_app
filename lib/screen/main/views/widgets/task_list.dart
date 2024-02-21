@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:task_management_app/models/task.dart';
 import 'package:task_management_app/screen/main/controllers/main_controller.dart';
+import 'package:task_management_app/screen/main/views/widgets/task_item.dart';
 import 'package:task_management_app/widgets/loading_indicator.dart';
 
 import '../../../../constants/app_colors.dart';
@@ -68,6 +69,7 @@ class _TaskListState extends State<TaskList> {
                   itemComparator: (item1, item2) => item1.createdAt.compareTo(item2.createdAt),
                   itemBuilder: (context, task) {
                     final int taskIndex = widget.tasksData.indexOf(task);
+
                     return Dismissible(
                       key: UniqueKey(),
                       onDismissed: (direction) {
@@ -93,74 +95,7 @@ class _TaskListState extends State<TaskList> {
                       direction: DismissDirection.endToStart,
                       child: Column(
                         children: [
-                          Container(
-                            margin: const EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: 10,
-                            ),
-                            padding: const EdgeInsets.only(
-                              top: 8,
-                              bottom: 8,
-                              right: 10,
-                            ),
-                            decoration: const BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.all(Radius.circular(6)),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: AppColors.lightGray,
-                                    blurRadius: 10,
-                                  ),
-                                ]),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  alignment: Alignment.topCenter,
-                                  decoration: const BoxDecoration(
-                                      color: AppColors.gradientLeft,
-                                      borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(2),
-                                        bottomRight: Radius.circular(2),
-                                      )),
-                                  height: 24,
-                                  width: 3,
-                                ),
-                                const SizedBox(
-                                  width: 28,
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        task.title,
-                                        style: const TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColors.gray,
-                                        ),
-                                      ),
-                                      Text(
-                                        task.description,
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          color: AppColors.darkGray,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Center(
-                                  child: Image.asset(
-                                    ImagePath.menu,
-                                    width: 20,
-                                    height: 20,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
+                          TaskItem(task: task),
                           widget.isLoadMore && widget.tasksData.length - 1 == widget.tasksData.indexOf(task)
                               ? const LoadingIndicator()
                               : const SizedBox()
