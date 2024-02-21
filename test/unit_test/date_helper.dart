@@ -6,7 +6,7 @@ void main() {
     String createdDate = '2023-03-24T19:30:00Z';
     String dateGroupSeparatorFormat = DateHelper.dateGroupSeparator(createdDate);
     String taskDateGroupFormat = DateHelper.dateGroupFormat(dateGroupSeparatorFormat);
-    // var resultDate;
+
     test(
         'Test convert createdDate to date format YYYY-MM-DD to group date order',
         () => {
